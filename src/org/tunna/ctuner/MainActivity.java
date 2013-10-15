@@ -69,11 +69,10 @@ public class MainActivity extends Activity {
                 final short[] sData = new short[BUFFER_SIZE];
                 final float[] fData = new float[BUFFER_SIZE];
 
-                int offset = 0;
-
-                // This loop will be correct after 3 rounds because of the BUFFER_OVERLAY offset
+                // This loop will be correct after 3 rounds because of
+                // the BUFFER_OVERLAY offset
                 while (isRecording) {
-                    recorder.read(sData, offset, BUFFER_SIZE - BUFFER_OVERLAY);
+                    recorder.read(sData, BUFFER_OVERLAY, BUFFER_SIZE - BUFFER_OVERLAY);
 
                     short2Float(sData, fData);
 
@@ -83,11 +82,13 @@ public class MainActivity extends Activity {
                             public void run() {
                                 NoteGuessResult guess = Util.guessNote(pitch);
                                 noteTV.setText(guess.toString());
-                                freqTV.setText(String.format("%.2f", pitch));
+                                freqTV.setText(String.format("%.1f", pitch));
                             }
                         });
 
-                    offset = (offset + (BUFFER_SIZE - BUFFER_OVERLAY)) % BUFFER_SIZE;
+                    for (int i = 0; i < BUFFER_OVERLAY; ++i) {
+                        sData[i] = sData[i + BUFFER_SIZE - BUFFER_OVERLAY];
+                    }
                 }
             }
         }.start();
