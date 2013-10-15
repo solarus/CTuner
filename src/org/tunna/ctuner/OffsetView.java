@@ -32,8 +32,8 @@ public class OffsetView extends View {
         int end = midW + Math.round(ratio * 100);
         canvas.drawRect(midW, midH-5, end, midH+5, green);
 
-        Paint centerPaint = Math.abs(end) < 3 ? green : gray;
-        canvas.drawRect(midW-1, 0, midW+1, height-1, centerPaint);
+        Paint centerPaint = (Math.abs(end) - midW) <= 3 ? green : gray;
+        canvas.drawRect(midW-3, 0, midW+3, height-1, centerPaint);
     }
 
     public void setOffsetRatio(float ratio) {
