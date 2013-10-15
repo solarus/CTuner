@@ -16,4 +16,8 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:gravity="center" />
+  <org.tunna.ctuner.OffsetView
+      android:id="@+id/offset_view"
+      android:layout_width="fill_parent"
+      android:layout_height="40sp" />
 </LinearLayout>
