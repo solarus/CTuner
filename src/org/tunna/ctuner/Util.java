@@ -33,7 +33,7 @@ public class Util {
         }
     }
 
-    public static NoteGuessResult guessNote(float freq) {
+    public static void guessNote(float freq, NoteGuessResult guess) {
         float lowC = (float) 27.5 * (float) Math.pow(2, 1.0/4.0);
 
         int octave = 1;
@@ -65,25 +65,30 @@ public class Util {
 
         float offset = freq - noteFreq;
         float offsetRatio = 2 * offset / (noteFreq - prevFreq);
-
-        return new NoteGuessResult(note, octave, offset, offsetRatio);
+        guess.note = note;
+        guess.octave = octave;
+        guess.offset = offset;
+        guess.offsetRatio = offsetRatio;
+        guess.realPitch = noteFreq;
     }
 
     public static class NoteGuessResult {
-        public final Note note;
-        public final int octave;
-        public final float offset;
-        public final float offsetRatio;
+        public Note note;
+        public int octave;
+        public float offset;
+        public float offsetRatio;
+        public float realPitch;
 
-        public NoteGuessResult(Note n, int oc) {
-            this(n, oc, 0, 0);
+        public NoteGuessResult() {
+            this(Note.C, 1, 0, 0, 0);
         }
 
-        public NoteGuessResult(Note n, int oc, float of, float ofr) {
+        public NoteGuessResult(Note n, int oc, float of, float ofr, float real) {
             note        = n;
             octave      = oc;
             offset      = of;
             offsetRatio = ofr;
+            realPitch   = real;
         }
 
         public String toString() {
