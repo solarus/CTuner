@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
     private AudioRecord recorder    = null;
     private boolean startedRecording = false;
     private boolean isRecording = false;
-    private String text = "foo";
     private TextView freqTV = null;
     private TextView noteTV = null;
     private FastYin yin = null;
