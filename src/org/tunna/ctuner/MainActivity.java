@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
 
     private static final boolean ON_GENY = false;
 
-    private static final int SAMPLERATE        = ON_GENY ? 8000 : 44100;
+    private static final int SAMPLERATE        = ON_GENY ? 8000 : 22050;
     private static final int NUM_CHANNELS      = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
 
