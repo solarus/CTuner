@@ -71,12 +71,17 @@ public class MainActivity extends Activity {
                 final float[] fData = new float[BUFFER_SIZE];
                 final NoteGuessResult guess = new NoteGuessResult();
 
+                final int diff = BUFFER_SIZE - BUFFER_OVERLAY;
+
                 // This loop will be correct after 3 rounds because of
                 // the BUFFER_OVERLAY offset
                 while (isRecording) {
-                    recorder.read(sData, BUFFER_OVERLAY, BUFFER_SIZE - BUFFER_OVERLAY);
+                    recorder.read(sData, BUFFER_OVERLAY, diff);
 
-                    short2Float(sData, fData);
+                    // short2Float(sData, fData);
+                    for (int i = BUFFER_OVERLAY; i < diff; ++i) {
+                        fData[i] = (float) sData[i];
+                    }
 
                     final Float pitch = yin.getPitch(fData).getPitch();
 
@@ -90,18 +95,12 @@ public class MainActivity extends Activity {
                         });
 
                     for (int i = 0; i < BUFFER_OVERLAY; ++i) {
-                        sData[i] = sData[i + BUFFER_SIZE - BUFFER_OVERLAY];
+                        sData[i] = sData[i + diff];
+                        fData[i] = (float) sData[i + diff];
                     }
                 }
             }
         }.start();
-    }
-
-    private void short2Float(short[] sData, float[] fData) {
-        int n = sData.length;
-        for (int i = 0; i < n; ++i) {
-            fData[i] = (float) sData[i];
-        }
     }
 
     private void stopRecording() {
