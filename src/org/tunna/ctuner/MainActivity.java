@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    private static final boolean ON_GENY = true;
+    private static final boolean ON_GENY = false;
 
     private static final int SAMPLERATE        = ON_GENY ? 8000 : 44100;
     private static final int NUM_CHANNELS      = AudioFormat.CHANNEL_IN_MONO;
@@ -27,6 +27,7 @@ public class MainActivity extends Activity {
     private boolean isRecording = false;
     private TextView freqTV = null;
     private TextView noteTV = null;
+    private OffsetView offsetView = null;
     private FastYin yin = null;
 
     @Override
@@ -39,6 +40,7 @@ public class MainActivity extends Activity {
 
         freqTV = (TextView) findViewById(R.id.freq);
         noteTV = (TextView) findViewById(R.id.note);
+        offsetView = (OffsetView) findViewById(R.id.offset_view);
     }
 
     @Override
@@ -67,6 +69,7 @@ public class MainActivity extends Activity {
             public void run() {
                 final short[] sData = new short[BUFFER_SIZE];
                 final float[] fData = new float[BUFFER_SIZE];
+                final NoteGuessResult guess = new NoteGuessResult();
 
                 // This loop will be correct after 3 rounds because of
                 // the BUFFER_OVERLAY offset
@@ -79,9 +82,10 @@ public class MainActivity extends Activity {
 
                     runOnUiThread(new Runnable() {
                             public void run() {
-                                NoteGuessResult guess = Util.guessNote(pitch);
+                                Util.guessNote(pitch, guess);
                                 noteTV.setText(guess.toString());
-                                freqTV.setText(String.format("%.1f", pitch));
+                                freqTV.setText(String.format("%.1f (%.1f)", pitch, guess.realPitch));
+                                offsetView.setOffsetRatio(guess.offsetRatio);
                             }
                         });
 
