@@ -1,12 +1,24 @@
 package org.tunna.ctuner;
 
+import android.graphics.Paint;
 import android.util.Pair;
 import java.util.ArrayList;
 
 public class Util {
 
+    public static int green = -1;
+    public static int gray = -1;
+    public static int drawColor = -1;
+
     enum Note {
-        A, AS, B, C, CS, D, DS, E, F, FS, G, GS;
+        A(false), AS(true), B(false), C(false), CS(true), D(false),
+        DS(true), E(false), F(false), FS(true), G(false), GS(true);
+
+        public final boolean isSharp;
+
+        private Note(boolean isSharp) {
+            this.isSharp = isSharp;
+        }
 
         public Note next() {
             if (this == Note.GS) {
@@ -22,6 +34,15 @@ public class Util {
             }
 
             return values()[ordinal() - 1];
+        }
+
+        public String noteLetter() {
+            if (isSharp) {
+                return prev().toString();
+            }
+            else {
+                return toString();
+            }
         }
 
         private static String[] stringVals =

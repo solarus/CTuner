@@ -8,15 +8,8 @@ import android.view.View;
 
 public class OffsetView extends View {
 
-    private static Paint green = new Paint();
-    private static Paint gray  = new Paint();
-
-    static {
-        green.setColor(0xff20ff20);
-        gray.setColor(0xffa0a0a0);
-    }
-
-    private float ratio = 0;
+    private       float offset = 0;
+    private final Paint drawPaint = new Paint();
 
     public OffsetView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
@@ -29,15 +22,16 @@ public class OffsetView extends View {
         int midW   = width/2;
         int midH   = height/2;
 
-        int end = midW + Math.round(ratio * 100);
-        canvas.drawRect(midW, midH-5, end, midH+5, green);
+        int end = midW + Math.round(offset*10);
+        canvas.drawRect(midW, midH-5, end, midH+5, drawPaint);
 
-        Paint centerPaint = (Math.abs(end) - midW) <= 3 ? green : gray;
-        canvas.drawRect(midW-3, 0, midW+3, height-1, centerPaint);
+        // Paint centerPaint = Math.abs(end - midW) <= 3 ? Util.green : Util.gray;
+        canvas.drawRect(midW-1, 0, midW, height-1, drawPaint);
     }
 
-    public void setOffsetRatio(float ratio) {
-        this.ratio = ratio;
+    public void setOffset(float offset) {
+        this.offset = offset;
+        drawPaint.setColor(Util.drawColor);
         invalidate();
     }
 

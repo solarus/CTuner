@@ -14,12 +14,15 @@ public class MainActivity extends Activity {
 
     private static final boolean ON_GENY = false;
 
-    private static final int SAMPLERATE        = ON_GENY ? 8000 : 22050;
+    private static final int SAMPLERATE        = 11025;
     private static final int NUM_CHANNELS      = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
 
     private static final int BUFFER_SIZE    = 4096;
     private static final int BUFFER_OVERLAY = BUFFER_SIZE * 3/4;
+
+    private static final int FRAMERATE    = 60;
+    private static final int UPDATE_DELAY = 1000/FRAMERATE;
 
     private boolean runUpdateThread = true;
     private AudioRecord recorder    = null;
@@ -27,19 +30,28 @@ public class MainActivity extends Activity {
     private boolean isRecording = false;
     private TextView freqTV = null;
     private TextView noteTV = null;
+    private TextView noteSharpTV = null;
+    private TextView noteOctaveTV = null;
     private OffsetView offsetView = null;
     private FastYin yin = null;
+    private long lastUpdateTime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        Util.green = getResources().getColor(R.color.green);
+        Util.gray = getResources().getColor(R.color.gray);
+        Util.drawColor = Util.gray;
+
         double yinThreshold = 0.3;
         yin = new FastYin(SAMPLERATE, BUFFER_SIZE, yinThreshold);
 
         freqTV = (TextView) findViewById(R.id.freq);
         noteTV = (TextView) findViewById(R.id.note);
+        noteSharpTV = (TextView) findViewById(R.id.note_sharp);
+        noteOctaveTV = (TextView) findViewById(R.id.note_octave);
         offsetView = (OffsetView) findViewById(R.id.offset_view);
     }
 
@@ -56,12 +68,19 @@ public class MainActivity extends Activity {
         runUpdateThread = false;
     }
 
+    private float pitch = 0;
     private void startRecording() {
+        final int minBufferSize = AudioRecord.getMinBufferSize(SAMPLERATE, NUM_CHANNELS, RECORDER_ENCODING);
+
+        final int bufferSize = Math.max(minBufferSize, BUFFER_SIZE);
+
+        Log.d("### bufferSize = " + bufferSize);
+
         recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                                    SAMPLERATE,
                                    NUM_CHANNELS,
                                    RECORDER_ENCODING,
-                                   BUFFER_SIZE);
+                                   bufferSize);
         recorder.startRecording();
         isRecording = true;
 
@@ -69,28 +88,27 @@ public class MainActivity extends Activity {
             public void run() {
                 final short[] sData = new short[BUFFER_SIZE];
                 final float[] fData = new float[BUFFER_SIZE];
-                final NoteGuessResult guess = new NoteGuessResult();
 
-                final int diff = BUFFER_SIZE - BUFFER_OVERLAY;
+                final int diff = bufferSize - BUFFER_OVERLAY;
+                pitch = 0;
 
                 // This loop will be correct after 3 rounds because of
                 // the BUFFER_OVERLAY offset
                 while (isRecording) {
                     recorder.read(sData, BUFFER_OVERLAY, diff);
 
-                    // short2Float(sData, fData);
                     for (int i = BUFFER_OVERLAY; i < diff; ++i) {
                         fData[i] = (float) sData[i];
                     }
 
-                    final Float pitch = yin.getPitch(fData).getPitch();
+                    float currentPitch = yin.getPitch(fData).getPitch();
+                    if (currentPitch != -1) {
+                        pitch = currentPitch;
+                    }
 
                     runOnUiThread(new Runnable() {
                             public void run() {
-                                Util.guessNote(pitch, guess);
-                                noteTV.setText(guess.toString());
-                                freqTV.setText(String.format("%.1f (%.1f)", pitch, guess.realPitch));
-                                offsetView.setOffsetRatio(guess.offsetRatio);
+                                updateNote(pitch);
                             }
                         });
 
@@ -103,11 +121,43 @@ public class MainActivity extends Activity {
         }.start();
     }
 
+    private final NoteGuessResult guess = new NoteGuessResult();
+    private synchronized void updateNote(final float pitch) {
+        long currentTime = System.currentTimeMillis();
+        if (lastUpdateTime < currentTime - UPDATE_DELAY) {
+            Util.guessNote(pitch, guess);
+
+            setColor(guess.offset);
+
+            noteTV.setText(guess.note.noteLetter());
+
+            String sharpText = guess.note.isSharp ? "#" : "";
+            noteSharpTV.setText(sharpText);
+
+            noteOctaveTV.setText(Integer.toString(guess.octave));
+
+            freqTV.setText(String.format("%.1f (%.1f)", pitch, guess.realPitch));
+            offsetView.setOffset(guess.offset);
+            lastUpdateTime = currentTime;
+        }
+    }
+
     private void stopRecording() {
         isRecording = false;
         recorder.stop();
         recorder.release();
         recorder = null;
+    }
+
+    private void setColor(float offset) {
+        Util.drawColor = Math.abs(offset) <= 0.5 ? Util.green : Util.gray;
+        setTVColor(Util.drawColor);
+    }
+
+    private void setTVColor(int color) {
+        noteTV.setTextColor(color);
+        noteSharpTV.setTextColor(color);
+        noteOctaveTV.setTextColor(color);
     }
 
 }

@@ -2,22 +2,60 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-  <TextView
-      android:id="@+id/note"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:textSize="60pt"
-      android:textColor="#20f020"
-      android:gravity="center" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="85sp">
+
+    <TextView
+        android:id="@+id/note"
+        android:layout_weight="45"
+        android:layout_width="match_parent"
+        android:layout_height="85sp"
+        android:textSize="60sp"
+        android:textColor="#20f020"
+        android:gravity="right"
+        android:layout_rowSpan="2" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="55"
+        android:layout_width="match_parent"
+        android:layout_height="85sp"
+        android:paddingLeft="5sp"
+        android:gravity="left">
+
+      <TextView
+          android:id="@+id/note_sharp"
+          android:layout_width="match_parent"
+          android:layout_height="43sp"
+          android:textSize="30sp"
+          android:gravity="bottom" />
+
+      <TextView
+          android:id="@+id/note_octave"
+          android:layout_width="match_parent"
+          android:layout_height="40sp"
+          android:textSize="30sp"
+          android:gravity="bottom" />
+
+    </LinearLayout>
+
+  </LinearLayout>
+
   <TextView
       android:id="@+id/freq"
-      android:layout_width="fill_parent"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center" />
+
   <org.tunna.ctuner.OffsetView
       android:id="@+id/offset_view"
-      android:layout_width="fill_parent"
-      android:layout_height="40sp" />
+      android:layout_width="match_parent"
+      android:layout_height="40sp"
+      android:layout_marginTop="8sp" />
+
 </LinearLayout>
