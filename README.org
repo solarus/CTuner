@@ -1,0 +1,14 @@
+* CTuner
+  A very simple chromatic tuner for android. Uses the YIN-algorithm to
+  estimate the current pitch.
+
+* ToDo
+  - Try MPM instead of YIN to calculate pitch. Defined in "A SMARTER
+    WAY TO FIND PITCH" (P. McLeod, G. Wyvill).
+
+* License
+  GPLv3. See LICENSE.
+
+* Credits
+  - FastYIN.java is from the TarsosDSP project:
+    https://github.com/JorenSix/TarsosDSP
