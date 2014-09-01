@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <target name="doc" depends="-set-debug-mode,-build-setup">
+
+        <echo>Generating javadoc</echo>
+
+        <property name="project.target.class.path" refid="project.target.class.path"/>
+        <property name="project.all.jars.path" refid="project.all.jars.path"/>
+
+        <javadoc access="private"
+            classpath="${project.target.class.path}:${project.all.jars.path}"
+            destdir="docs"
+            packagenames="${project.app.package}.*"
+            source="1.5" sourcepath="gen:src" />
+    </target>
+</project>
