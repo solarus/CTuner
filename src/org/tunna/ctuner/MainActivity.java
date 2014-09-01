@@ -8,6 +8,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -40,6 +41,8 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Util.green = getResources().getColor(R.color.green);
         Util.gray = getResources().getColor(R.color.gray);
