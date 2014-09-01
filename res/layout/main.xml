@@ -52,8 +52,8 @@
       android:layout_height="wrap_content"
       android:gravity="center" />
 
-  <org.tunna.ctuner.OffsetView
-      android:id="@+id/offset_view"
+  <org.tunna.ctuner.HorizontalBarView
+      android:id="@+id/bar_view"
       android:layout_width="match_parent"
       android:layout_height="40sp"
       android:layout_marginTop="8sp" />

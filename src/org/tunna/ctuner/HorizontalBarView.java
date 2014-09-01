@@ -6,12 +6,12 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class OffsetView extends View {
+public class HorizontalBarView extends View {
 
     private       float offset = 0;
     private final Paint drawPaint = new Paint();
 
-    public OffsetView(Context ctx, AttributeSet attrs) {
+    public HorizontalBarView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
     }
 
