@@ -93,7 +93,6 @@ public class MainActivity extends Activity {
                 final float[] fData = new float[BUFFER_SIZE];
 
                 final int diff = bufferSize - BUFFER_OVERLAY;
-                // pitch = 0;
 
                 // This loop will be correct after 3 rounds because of
                 // the BUFFER_OVERLAY offset

@@ -49,12 +49,10 @@ public class HorizontalBarView extends View {
     public void setLength(float length) {
         length = truncateLength(length);
 
-        if (this.length == length) {
-            return;
+        if (this.length != length) {
+            this.length = length;
+            postInvalidate();
         }
-
-        this.length = length;
-        postInvalidate();
     }
 
     // TODO: Can this be done with setBackgroundColor somehow instead?
