@@ -127,17 +127,16 @@ public class MainActivity extends Activity {
         if (lastUpdateTime < currentTime - UPDATE_DELAY) {
             Util.guessNote(pitch, guess);
 
-            setColor(guess.offset);
+            updateColor(guess.offsetRatio);
 
             noteTV.setText(guess.note.noteLetter());
-
             String sharpText = guess.note.isSharp ? "#" : "";
             noteSharpTV.setText(sharpText);
-
             noteOctaveTV.setText(Integer.toString(guess.octave));
-
             freqTV.setText(String.format("%.1f (%.1f)", pitch, guess.realPitch));
+
             barView.setLength(guess.offsetRatio);
+
             lastUpdateTime = currentTime;
         }
     }
@@ -149,9 +148,10 @@ public class MainActivity extends Activity {
         recorder = null;
     }
 
-    private void setColor(float offset) {
-        Util.drawColor = Math.abs(offset) <= 0.5 ? Util.green : Util.gray;
+    private void updateColor(float offsetRatio) {
+        Util.drawColor = Math.abs(offsetRatio) <= 0.015 ? Util.green : Util.gray;
         setTVColor(Util.drawColor);
+        barView.setColor(Util.drawColor);
     }
 
     private void setTVColor(int color) {

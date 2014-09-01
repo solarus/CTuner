@@ -54,8 +54,18 @@ public class HorizontalBarView extends View {
         }
 
         this.length = length;
-        drawPaint.setColor(Util.drawColor);
         postInvalidate();
+    }
+
+    // TODO: Can this be done with setBackgroundColor somehow instead?
+    // Maybe look at using a drawable instead of a view.
+    /**
+     * Set the color of the horizontal bar to be used after it is
+     * redrawn. Does not invalidate the current view.
+     *
+     */
+    public void setColor(int color) {
+        drawPaint.setColor(color);
     }
 
     /**
