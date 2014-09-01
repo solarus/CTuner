@@ -55,7 +55,7 @@ public class HorizontalBarView extends View {
 
         this.length = length;
         drawPaint.setColor(Util.drawColor);
-        invalidate();
+        postInvalidate();
     }
 
     /**
