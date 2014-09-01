@@ -22,6 +22,8 @@ public class HorizontalBarView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
         int width  = getMeasuredWidth();
         int height = getMeasuredHeight();
         int midW   = width/2;
