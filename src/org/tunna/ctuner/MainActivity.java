@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
     private TextView noteTV = null;
     private TextView noteSharpTV = null;
     private TextView noteOctaveTV = null;
-    private OffsetView offsetView = null;
+    private HorizontalBarView barView = null;
     private FastYin yin = null;
     private long lastUpdateTime = 0;
 
@@ -52,7 +52,7 @@ public class MainActivity extends Activity {
         noteTV = (TextView) findViewById(R.id.note);
         noteSharpTV = (TextView) findViewById(R.id.note_sharp);
         noteOctaveTV = (TextView) findViewById(R.id.note_octave);
-        offsetView = (OffsetView) findViewById(R.id.offset_view);
+        barView = (HorizontalBarView) findViewById(R.id.bar_view);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
         runUpdateThread = false;
     }
 
-    private float pitch = 0;
+    private float pitch = 220;
     private void startRecording() {
         final int minBufferSize = AudioRecord.getMinBufferSize(SAMPLERATE, NUM_CHANNELS, RECORDER_ENCODING);
 
@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
                 final float[] fData = new float[BUFFER_SIZE];
 
                 final int diff = bufferSize - BUFFER_OVERLAY;
-                pitch = 0;
+                // pitch = 0;
 
                 // This loop will be correct after 3 rounds because of
                 // the BUFFER_OVERLAY offset
@@ -102,7 +102,7 @@ public class MainActivity extends Activity {
                     }
 
                     float currentPitch = yin.getPitch(fData).getPitch();
-                    if (currentPitch != -1) {
+                    if (currentPitch != -1 && currentPitch > 30) {
                         pitch = currentPitch;
                     }
 
@@ -137,7 +137,7 @@ public class MainActivity extends Activity {
             noteOctaveTV.setText(Integer.toString(guess.octave));
 
             freqTV.setText(String.format("%.1f (%.1f)", pitch, guess.realPitch));
-            offsetView.setOffset(guess.offset);
+            barView.setLength(guess.offsetRatio);
             lastUpdateTime = currentTime;
         }
     }

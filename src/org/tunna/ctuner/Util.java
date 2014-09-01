@@ -85,7 +85,10 @@ public class Util {
         }
 
         float offset = freq - noteFreq;
-        float offsetRatio = 2 * offset / (noteFreq - prevFreq);
+        float nextFreq = noteFreq * a12;
+        float mid = offset < 0 ? (noteFreq - prevFreq)/2 : (nextFreq - noteFreq)/2;
+        float offsetRatio = offset/mid;
+
         guess.note = note;
         guess.octave = octave;
         guess.offset = offset;
