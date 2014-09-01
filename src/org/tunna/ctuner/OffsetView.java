@@ -21,12 +21,12 @@ public class OffsetView extends View {
         int height = getMeasuredHeight();
         int midW   = width/2;
         int midH   = height/2;
+        int end    = midW + Math.round(offset*10);
 
-        int end = midW + Math.round(offset*10);
-        canvas.drawRect(midW, midH-5, end, midH+5, drawPaint);
-
-        // Paint centerPaint = Math.abs(end - midW) <= 3 ? Util.green : Util.gray;
+        // Draw the middle vertical line
         canvas.drawRect(midW-1, 0, midW, height-1, drawPaint);
+        // Draw the horizontal bar
+        canvas.drawRect(midW, midH-5, end, midH+5, drawPaint);
     }
 
     public void setOffset(float offset) {
